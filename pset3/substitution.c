@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <cs50.h>
 #include <string.h>
-// #include <math.h>
 
 void key_validator(string key);
+void substitue_letters(string key);
 int main(int argc, string argv[])
 {
     // validate the key
@@ -17,6 +17,8 @@ void key_validator(string key)
     if (strlen(key) != 26)
     {
         printf("Key must contain 26 characters.");
+        isUnique = false;
+        return;
     }
     else
     {
@@ -43,109 +45,45 @@ void key_validator(string key)
             }
         }
     }
+    if (isUnique)
+    {
+        substitue_letters(key);
+    }
 }
 
-// void check_for_non_unique_chars(string key, int i)
-// {
+void substitue_letters(string key)
+{
 
-//     return isUnique;
-// }
+    char subs[strlen(key)][2];
+    char letter_a = 'A';
+    string plaintext = get_string("plaintext:");
+    char ciphertext[40] = "";
 
-// #include <stdio.h>
-// #include <cs50.h>
-// #include <string.h>
-// // #include <math.h>
+    for (int i = 0; i < strlen(key); i++)
+    {
+        if ((key[i] >= 'A' && key[i] <= 'Z') || (key[i] + 32 >= 'a' && key[i] + 32 <= 'z'))
+        {
+            subs[i][0] = letter_a;
+            subs[i][1] = key[i];
+            letter_a++;
+        }
+    }
 
-// void key_validator(string key);
-// void check_for_non_unique_chars(string key);
-// int main(int argc, string argv[])
-// {
-//     // validate the key
-//     key_validator(argv[1]);
-// }
-
-// void key_validator(string key)
-// {
-//     if (strlen(key) != 26)
-//     {
-//         printf("Key must contain 26 characters.");
-//     }
-//     else
-//     {
-//         for (int i = 0; i < strlen(key); i++)
-//         {
-//             if (!(key[i] >= 'A' && key[i] <= 'Z') && !(key[i] >= 'a' && key[i] <= 'z'))
-//             {
-//                 printf("Usage: ./substitution key\n");
-//                 return;
-//             }
-//         }
-//         check_for_non_unique_chars(key);
-//     }
-// }
-
-// void check_for_non_unique_chars(string key)
-// {
-//     for (int i = 0; i < strlen(key) - 1; i++)
-//     {
-//         for (int j = i + 1; j < strlen(key); j++)
-//         {
-//             if (key[i] == key[j])
-//             {
-//                 printf("Usage: ./substitution key\n");
-//                 return;
-//             }
-//         }
-//     }
-//     printf("all clear yo!");
-// }
-
-// #include <stdio.h>
-// #include <cs50.h>
-// #include <string.h>
-// // #include <math.h>
-
-// void key_validator(string key);
-// void check_for_non_unique_chars(string key, int i);
-// int main(int argc, string argv[])
-// {
-//     // validate the key
-//     key_validator(argv[1]);
-// }
-
-// void key_validator(string key)
-// {
-//     if (strlen(key) != 26)
-//     {
-//         printf("Key must contain 26 characters.");
-//     }
-//     else
-//     {
-//         for (int i = 0; i < strlen(key); i++)
-//         {
-//             if (!(key[i] >= 'A' && key[i] <= 'Z') && !(key[i] >= 'a' && key[i] <= 'z'))
-//             {
-//                 printf("Usage: ./substitution key\n");
-//                 return;
-//             }
-//             else
-//             {
-//                 check_for_non_unique_chars(key, i);
-//             }
-//         }
-//     }
-// }
-
-// void check_for_non_unique_chars(string key, int i)
-// {
-
-//     for (int j = i + 1; j < strlen(key); j++)
-//     {
-//         if (key[i] == key[j])
-//         {
-//             printf("Usage: ./substitution key\n");
-//             return;
-//         }
-//     }
-
-// }
+    for (int k = 0; k < strlen(plaintext); k++)
+    {
+        for (int j = 0; j <= strlen(key); j++)
+        {
+            //  that needs fixing so the small letter can also be accepted
+            if (subs[j][0] == plaintext[k] || subs[j][0] + 32 == plaintext[k] + 32)
+            {
+                strncat(ciphertext, &subs[j][1], 1);
+                break;
+            }
+            else if (j == strlen(key))
+            {
+                strncat(ciphertext, &plaintext[k], 1);
+            }
+        }
+    }
+    printf("ciphertext: %s", ciphertext);
+}
