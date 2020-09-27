@@ -6,7 +6,6 @@ void key_validator(string key);
 void substitue_letters(string key);
 int main(int argc, string argv[])
 {
-    // validate the key
     key_validator(argv[1]);
 }
 
@@ -61,9 +60,15 @@ void substitue_letters(string key)
 
     for (int i = 0; i < strlen(key); i++)
     {
-        if ((key[i] >= 'A' && key[i] <= 'Z') || (key[i] + 32 >= 'a' && key[i] + 32 <= 'z'))
+        if (key[i] >= 'A' && key[i] <= 'Z')
         {
             subs[i][0] = letter_a;
+            subs[i][1] = key[i];
+            letter_a++;
+        }
+        else if (key[i] >= 'a' && key[i] <= 'z')
+        {
+            subs[i][0] = letter_a + 32;
             subs[i][1] = key[i];
             letter_a++;
         }
@@ -73,12 +78,28 @@ void substitue_letters(string key)
     {
         for (int j = 0; j <= strlen(key); j++)
         {
-            //  that needs fixing so the small letter can also be accepted
-            if (subs[j][0] == plaintext[k] || subs[j][0] + 32 == plaintext[k] + 32)
+            if ((plaintext[k] >= 'A' && plaintext[k] <= 'Z') || (plaintext[k] >= 'a' && plaintext[k] <= 'z'))
             {
-                strncat(ciphertext, &subs[j][1], 1);
-                break;
+                if (subs[j][0] == plaintext[k] || subs[j][0] + 32 == plaintext[k] || subs[j][0] - 32 == plaintext[k])
+                {
+                    if (plaintext[k] >= 'a' && subs[j][1] <= 'a')
+                    {
+                        char toAdd = subs[j][1] + 32;
+                        strncat(ciphertext, &toAdd, 1);
+                    }
+                    else if (plaintext[k] <= 'a' && subs[j][1] >= 'a')
+                    {
+                        char toAdd = subs[j][1] - 32;
+                        strncat(ciphertext, &toAdd, 1);
+                    }
+                    else
+                    {
+                        strncat(ciphertext, &subs[j][1], 1);
+                    }
+                    break;
+                }
             }
+
             else if (j == strlen(key))
             {
                 strncat(ciphertext, &plaintext[k], 1);
