@@ -54,14 +54,11 @@ for val in strs:
 
     sequencesCount[val] = str(max_seq_len)
 
-print(sequencesCount)
+result = 'No match'
 
 for entry in database_array:
-    print(entry)
     duplicates = entry.items() & sequencesCount.items()
-    if(len(duplicates)  == len(sequencesCount)):
-        print(entry['name'])
-        match = entry['name']
-
-
-
+    if(len(duplicates)  >= 2):
+        result = entry['name']
+        
+print(result)
